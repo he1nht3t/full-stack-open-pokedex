@@ -21,3 +21,13 @@ jobs:
         run: npm run build
       - name: Test
         run: npm run test
+
+  deploy:
+    needs: simple_deployment_pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy to render
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
