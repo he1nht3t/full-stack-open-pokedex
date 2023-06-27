@@ -1,0 +1,21 @@
+name: Render Deploy
+
+on:
+  push:
+    branches:
+      - master # Change this to your main branch name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Render GitHub Action
+        uses: Bounceapp/render-action@0.7.0
+        with:
+          service_id: ${{ secrets.RENDER_SERVICE_ID }}
+          github-token: ${{ secrets.TOKEN_GITHUB }}
+          render_token: ${{ secrets.RENDER_API_KEY }}
