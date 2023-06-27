@@ -4,7 +4,7 @@ const app = express()
 // Heroku dynamically sets a port
 const PORT = process.env.PORT || 5001
 
-app.get('/health', (req, res) => {
+app.get('/health', (_, res) => {
   res.send('ok')
 })
 
