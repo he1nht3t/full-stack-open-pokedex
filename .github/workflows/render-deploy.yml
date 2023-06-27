@@ -1,20 +1,17 @@
-name: Render Deploy
+name: My Deploy
 
 on:
   push:
-    branches:
-      - master # Change this to your main branch name or the branch you want to deploy
+    branches: [master]
+  pull_request:
+    branches: [master]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Trigger deployment to Render
-        run: |
-          curl -X POST https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploy \
-               -H 'Content-Type: application/json' \
-               -H 'Authorization: Bearer ${{ secrets.RENDER_API_KEY }}'
+      - name: Deploy to production
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
