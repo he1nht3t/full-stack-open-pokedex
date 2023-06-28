@@ -27,6 +27,7 @@ jobs:
 
   deploy:
     needs: simple_deployment_pipeline
+    if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
     steps:
       - name: deploy to render
