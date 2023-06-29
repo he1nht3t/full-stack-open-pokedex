@@ -39,8 +39,8 @@ jobs:
 
       - name: Check commit message for skip
         run: |
-          if echo "${{ github.event.head_commit.message }}" | grep -q '#skip'; then
-            echo "Commit message contains #skip, skipping deployment and tagging"
+          if [[ $(git log --format=%B -n 1 ${{ github.event.pull_request.merge_commit_sha }}) == *"#skip"* ]]; then
+            echo "Commit message contains #skip. Skipping version tagging."
             exit 0
           fi
 
@@ -56,6 +56,13 @@ jobs:
     if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Check commit message for skip
+        run: |
+          if [[ $(git log --format=%B -n 1 ${{ github.event.pull_request.merge_commit_sha }}) == *"#skip"* ]]; then
+            echo "Commit message contains #skip. Skipping deployment."
+            exit 0
+          fi
+
       - name: deploy to render
         uses: johnbeynon/render-deploy-action@v0.0.8
         with:
