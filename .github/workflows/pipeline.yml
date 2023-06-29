@@ -27,7 +27,7 @@ jobs:
 
   tag_release:
     needs: simple_deployment_pipeline
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip') }}
     runs-on: ubuntu-20.04
     permissions:
       contents: write
@@ -36,13 +36,6 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.merge_commit_sha }}
           fetch-depth: '0'
-
-      - name: Check commit message for skip
-        run: |
-          if [[ $(git log --format=%B -n 1 ${{ github.event.pull_request.merge_commit_sha }}) == *"#skip"* ]]; then
-            echo "Commit message contains #skip. Skipping version tagging."
-            exit 0
-          fi
 
       - name: Bump version and push tag
         uses: anothrNick/github-tag-action@1.67.0
@@ -53,16 +46,9 @@ jobs:
 
   deploy:
     needs: simple_deployment_pipeline
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' && !contains(github.event.head_commit.message, '#skip') }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check commit message for skip
-        run: |
-          if [[ $(git log --format=%B -n 1 ${{ github.event.pull_request.merge_commit_sha }}) == *"#skip"* ]]; then
-            echo "Commit message contains #skip. Skipping deployment."
-            exit 0
-          fi
-
       - name: deploy to render
         uses: johnbeynon/render-deploy-action@v0.0.8
         with:
