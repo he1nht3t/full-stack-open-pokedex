@@ -37,6 +37,13 @@ jobs:
           ref: ${{ github.event.pull_request.merge_commit_sha }}
           fetch-depth: '0'
 
+      - name: Check commit message for skip
+        run: |
+          if echo "${{ github.event.head_commit.message }}" | grep -q '#skip'; then
+            echo "Commit message contains #skip, skipping deployment and tagging"
+            exit 0
+          fi
+
       - name: Bump version and push tag
         uses: anothrNick/github-tag-action@1.67.0
         env:
