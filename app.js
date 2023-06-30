@@ -5,7 +5,7 @@ const app = express()
 const PORT = process.env.PORT || 5001
 
 app.get('/health', (_, res) => {
-  res.sendStatus(404)
+  res.sendStatus(200)
 })
 
 app.use(express.static('dist'))
