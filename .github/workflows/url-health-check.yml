@@ -1,7 +1,11 @@
 name: URL Health Check
 on:
-  schedule:
-    - cron: '*/5 * * * *'
+  push:
+    branches:
+      - master
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
 
 jobs:
   health-check:
